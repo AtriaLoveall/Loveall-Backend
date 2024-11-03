@@ -25,10 +25,11 @@ const sendOTPBussiness = async (req, res, next) => {
         const current_time = new Date();
         const expiration_time = Number(process.env.OTP_EXPIRATION_TIME) || 10;
         const otp_expiration_time = new Date(current_time.getTime() + expiration_time * 60000);
+        const otp_expiration_time_iso = otp_expiration_time.toISOString();
 
         // Update OTP and expiration time
         const [updatedBusiness] = await Business.update(
-            { otp, otp_expiration_time },
+            { otp, otp_expiration_time_iso },
             { where: { business_email } }
         );
 
