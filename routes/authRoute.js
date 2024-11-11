@@ -1,19 +1,31 @@
-// authRoute.js
 import { Router } from 'express';
-import register from '../controllers/registerController.js';
-import login from '../controllers/loginController.js'
-import verifyOtp from '../controllers/verifyOtpController.js'
-import forgetPassword from '../controllers/forgetPasswordController.js';
-import sendOTP from '../controllers/sendOTP.js';
+import businessRegister from '../controllers/BusinessRegister.js';
+import businessLogin from '../controllers/BusinessLogin.js';
+import businessVerifyOtp from '../controllers/BusinessVerifyOtp.js';
+import businessForgetPassword from '../controllers/BForgetPassword.js';
+import businessSendOTP from '../controllers/BSendOtp.js';
+import manualverify from '../controllers/manualverification.js';
+import changePassword from '../controllers/BChangePassword.js';
+import businessProfileController from '../controllers/businessProfileController.js';
+import businessProfileUpdateController from '../controllers/businessProfileUpdateController.js';
+import businessCreateOfferController from '../controllers/businessCreateOfferController.js';
+import { authMiddleware } from '../middleware/isAuthenticated.js';
 
-const router = Router(); // Instantiate the Router
+const router = Router();
 
-// Define the route and associate it with the controller
-router.post('/register', register);      // Register route
-router.post('/login', login)             // Login route
-router.post('/forget-password', forgetPassword)      // Forget password Route
-router.post('/verify-otp', verifyOtp)
-router.post('/send-otp', sendOTP)
+// Public routes
+router.post('/register', businessRegister);
+router.post('/login', businessLogin);
+router.post('/forget-password', businessForgetPassword);
+router.post('/verify-otp', businessVerifyOtp);
+router.post('/send-otp', businessSendOTP);
 
-// Export the router as the default export
+// Protected routes
+router.use(authMiddleware);
+router.post('/manualverify', manualverify);
+router.post('/ChangePass', changePassword);
+router.post('/profile', businessProfileController);
+router.put('/update-profile', businessProfileUpdateController);
+router.post('/create-offer', businessCreateOfferController);
+
 export default router;

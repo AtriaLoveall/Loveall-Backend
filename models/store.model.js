@@ -1,17 +1,18 @@
 import sequelize from "../config/dbConfig.js";
 import { DataTypes } from "sequelize";
+import Business from "./Business.model.js";
 
 const Store = sequelize.define('stores', {
-    'store_id': {
+    store_id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
         autoIncrement: true
     },
-    'store_name': {
+    store_name: {
         type: DataTypes.STRING,
         allowNull: false
     },
-    'store_email': {
+    store_email: {
         type: DataTypes.STRING,
         allowNull: false,
         unique: true,
@@ -19,11 +20,11 @@ const Store = sequelize.define('stores', {
             isEmail: true
         }
     },
-    'owner_name': {
+    owner_name: {
         type: DataTypes.STRING,
         allowNull: false
     },
-    'phone_number': {
+    phone_number: {
         type: DataTypes.STRING,
         allowNull: false,
         validate: {
@@ -31,49 +32,48 @@ const Store = sequelize.define('stores', {
             len: [10, 15]
         }
     },
-    'password_hash': {
+    password_hash: {
         type: DataTypes.STRING,
         allowNull: false
     },
-    'otp': {
+    otp: {
         type: DataTypes.STRING
     },
-    'otp_expiration_time': {
+    otp_expiration_time: {
         type: DataTypes.DATE
     },
-    'address': {
+    address: {
         type: DataTypes.STRING
     },
-    'latitude': {
-        type: DataTypes.DECIMAL(10, 8)
+    business_id: {
+        type: DataTypes.INTEGER,
+        references: {
+            model: Business,
+            key: 'business_id'
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'SET NULL'
     },
-    'longitude': {
-        type: DataTypes.DECIMAL(11, 8)
+    manager_name: {
+        type: DataTypes.STRING
     },
-    'category': {
-        type: DataTypes.STRING(50)
+    manager_phone_no: {
+        type: DataTypes.STRING
     },
-    'rating': {
-        type: DataTypes.DECIMAL(2, 1)
-    },
-    'opening_hours': {
-        type: DataTypes.STRING(100)
-    },
-    'status': {
-        type: DataTypes.ENUM('active', 'inactive')
-    },
-    'created_at': {
+    created_at: {
         type: DataTypes.DATE,
         defaultValue: DataTypes.NOW
     },
-    'updated_at': {
+    updated_at: {
         type: DataTypes.DATE,
-        defaultValue: DataTypes.NOW,
-        onUpdate: DataTypes.NOW
+        defaultValue: DataTypes.NOW
     }
 }, {
     tableName: 'stores',
-    timestamps: false,
+    timestamps: false
 });
+
+Business.hasMany(Store, { foreignKey: 'business_id', onDelete: 'CASCADE' });
+Store.belongsTo(Business, { foreignKey: 'business_id', onDelete: 'CASCADE' });
 
 export default Store;
