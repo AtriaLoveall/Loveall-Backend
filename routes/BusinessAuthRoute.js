@@ -12,6 +12,7 @@ import businessCreateOfferController from '../controllers/businessCreateOfferCon
 import businessYourOffersController from '../controllers/businessYourOffersController.js';
 import businessCheckStoresController from '../controllers/businessCheckStoresController.js';
 import BusinessManageManyOffersController from '../controllers/BusinessManageManyOffersController.js';
+import businessProfileHeaderController from '../controllers/businessProfileHeaderController.js';
 import { authMiddleware } from '../middleware/isAuthenticated.js';
 
 const router = Router();
@@ -33,5 +34,6 @@ router.post('/create-offer', businessCreateOfferController);
 router.get('/your-offers', businessYourOffersController);
 router.get('/check-stores', businessCheckStoresController);
 router.get('/manage-many-offers', BusinessManageManyOffersController);
+router.get('/profile-header', businessProfileHeaderController);
 
 export default router;
