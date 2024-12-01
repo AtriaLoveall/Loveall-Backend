@@ -1,4 +1,4 @@
-import Business from "../models/Business.model.js";
+import Business from "../models/business.model.js";
 import { createJWT } from "../services/jwt.js";
 import { comparePassword } from "../services/passwordHash.js";
 

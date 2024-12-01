@@ -13,8 +13,9 @@ import businessCreateOfferController from '../controllers/BusinessCreateOfferCon
 import businessYourOffersController from '../controllers/BusinessYourOffersController.js';
 import businessCheckStoresController from '../controllers/BusinessCheckStoresController.js';
 import BusinessManageManyOffersController from '../controllers/BusinessManyOfferController.js';
-import businessProfileHeaderController from '../controllers/BusinessProfileHeaderController.js';
+import businessProfileHeaderController from '../controllers/BusinessProfileHeaderController.js';  
 import fetchFeedback from '../controllers/BFeedback.controller.js';
+import { BusinessTransactionController } from '../controllers/BTransaction.controller.js';
 
 const router = Router();
 
@@ -28,10 +29,11 @@ router.post('/ChangePass', changePassword);
 router.post('/profile', businessProfileController);
 router.put('/update-profile', businessProfileUpdateController);
 router.post('/create-offer', businessCreateOfferController);
-router.get('/your-offers', businessYourOffersController);
+router.post('/your-offers', businessYourOffersController);
 router.get('/check-stores', businessCheckStoresController);
 router.get('/manage-many-offers', BusinessManageManyOffersController);
 router.get('/profile-header', businessProfileHeaderController);
 router.get('/feedback',businessAuthMiddleware, fetchFeedback);
+router.post('/transaction',businessAuthMiddleware, BusinessTransactionController);
 
 export default router;

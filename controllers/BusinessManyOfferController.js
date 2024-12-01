@@ -1,5 +1,5 @@
 import { verifyJWT } from '../services/jwt.js';
-import Business from '../models/Business.model.js';
+import Business from '../models/business.model.js';
 import Store from '../models/store.model.js';
 
 const BusinessManageManyOffersController = async (req, res) => {

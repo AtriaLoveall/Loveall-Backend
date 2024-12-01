@@ -1,7 +1,5 @@
 import { verifyJWT } from '../services/jwt.js';
-import Business from '../models/business.model.js';
-import Store from '../models/store.model.js';
-import Offers from '../models/offer.model.js';
+import {Business, Store, Offers} from '../models/association.js';
 
 const businessYourOffersController = async (req, res) => {
   try {
@@ -25,36 +23,14 @@ const businessYourOffersController = async (req, res) => {
     }
 
     const stores = await Store.findAll({
-      where: { business_id: business.business_id },
+      where: { store_id: business.business_id },
       include: [{
         model: Offers,
-        as: 'Offers',
         attributes: ['offer_type', 'end_date']
       }],
-      attributes: ['store_name', 'address', 'manager_name', 'phone_number']
+      attributes: ['store_name', 'address', 'phone_number']
     });
-
-    console.log('Stores found:', JSON.stringify(stores, null, 2));
-
-    const formattedStores = stores.map(store => {
-      console.log('Processing store:', store.store_name);
-      console.log('Store offers:', store.Offers);
-      
-      return {
-        storeName: store.store_name,
-        address: store.address,
-        managerName: store.manager_name || 'Not specified',
-        contactNumber: store.phone_number,
-        offers: store.Offers && store.Offers.length > 0 ? store.Offers.map(offer => ({
-          offerType: offer.offer_type,
-          validTill: offer.end_date
-        })) : []
-      };
-    });
-
-    console.log('Formatted stores:', JSON.stringify(formattedStores, null, 2));
-
-    res.status(200).json(formattedStores);
+    res.status(200).json(stores);
   } catch (error) {
     console.error('Error in businessYourOffersController:', error);
     res.status(500).json({ message: 'Internal server error' });
