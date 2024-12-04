@@ -2,13 +2,12 @@ import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import http from 'http';
-import authRoute from './routes/authRoute.js';
-import userRoute from './routes/userRoute.js';
-import paymentRoute from './routes/paymentRoute.js';
-import profileRoute from './routes/profileRoute.js';  // Import profile route
+import authRoute from './routes/userAuth.route.js';
+import userRoute from './routes/user.route.js';
+import paymentRoute from './routes/payment.route.js';
 import rateLimit from 'express-rate-limit';
 import errorHandler from './middleware/errorHandler.js';
-import BRoute from './routes/BusinessAuthRoute.js';
+import BRoute from './routes/businessAuth.route.js';
 
 dotenv.config();
 
@@ -30,8 +29,7 @@ app.get('/test', (req, res) => {
 app.use('/api/auth', authRoute);
 app.use('/api/user', userRoute);
 app.use('/api/payment', paymentRoute);
-app.use('/api/profile', profileRoute);
-app.use('/api/Buss', BRoute);  // Add the profile route here
+app.use('/api/business', BRoute);  // Add the profile route here
 
 app.use(errorHandler);
 

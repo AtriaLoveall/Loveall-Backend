@@ -2,7 +2,7 @@ import {User, Business} from "../models/association.js";
 import { verifyJWT } from "../services/jwt.js";
 import jwt from 'jsonwebtoken';
 
-const authMiddleware = async (req, res, next) => {
+const userAuthMiddleware = async (req, res, next) => {
     const authorization = req.headers['authorization'];
     if (!authorization) {
         return res.status(403).json({
@@ -12,13 +12,18 @@ const authMiddleware = async (req, res, next) => {
     };
     const token = authorization.split(' ')[1];
     try {
-        const decoded = await verifyJWT(token);
+        const decoded = verifyJWT(token);
         const user = await User.findByPk(decoded.id);
         if (user) {
+            if (decoded.type == 'business' ) {
+                return res.status(403).json({
+                    message: "Unauthorized! User route is not accessible",
+                    redirectTo: "business"
+                });
+            }
             req.user = decoded;
             next();
         }
-        
         else  {
             return res.status(403).json({
                 message: "Unauthorized! Kindly register",
@@ -28,7 +33,6 @@ const authMiddleware = async (req, res, next) => {
         
     }
     catch (error) {
-        console.log(error)
         return res.status(403).json({
             message: "Unauthorized! Kindly register",
             redirectTo: "register"
@@ -81,4 +85,4 @@ const businessAuthMiddleware = async (req, res, next) => {
     }
 
 }
-export {authMiddleware, loginAuth, businessAuthMiddleware};
+export {userAuthMiddleware, loginAuth, businessAuthMiddleware};
