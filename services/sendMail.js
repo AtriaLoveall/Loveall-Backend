@@ -1,13 +1,12 @@
-import MAIL_TEMPLATE from "../config/mailTemplate.js"
-import transporter from "../config/mailConfig.js";
+import transporter from "../config/mail.Config.js";
 
-const sendMail = async (otp, to, subject) => {
+const sendMail = async (to, subject, content) => {
     const options = {
         from: process.env.EMAIL, // sender address
         to, // receiver email
         subject, // Subject line
         text: otp,
-        html: MAIL_TEMPLATE(otp),
+        html: content,
     }
     try {
         const info = await transporter.sendMail(options);  // Await the result of sendMail

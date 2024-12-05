@@ -1,6 +1,7 @@
 import { Business } from '../../models/association.js';
-import BsendMail from "../../services/BsendMail.js";
-import { getTempBusinessData, deleteTempBusinessData } from "../tempStorage.js"; // Import the temporary storage functions
+import sendMail from "../../services/sendMail.js";
+import { getTempBusinessData, deleteTempBusinessData } from "../../helper/tempStorage.js"; // Import the temporary storage functions
+import B_MAIL_TEMPLATE from "../../config/bMail.template.js"
 
 const verifyBusinessOtp = async (req, res, next) => {
   try {
@@ -34,7 +35,7 @@ const verifyBusinessOtp = async (req, res, next) => {
 
     const otp_expiration_time = new Date(current_time + expiration_time * 60000);
     //const otp_expiration_time_iso = otp_expiration_time.toISOString();
-    const otp_expiration_time_iso = "2024-11-03T10:30:00Z";
+    // const otp_expiration_time_iso = "2024-11-03T10:30:00Z";
     const password_hash="";
     // Create the business record in the database
     const newBusiness = await Business.create({
@@ -48,13 +49,13 @@ const verifyBusinessOtp = async (req, res, next) => {
       tan: tempBusinessData.tan,
       owner_name: tempBusinessData.owner_name,
       owner_contact_number: tempBusinessData.owner_contact_number,
-      otp_expiration_time:otp_expiration_time_iso,
+      otp_expiration_time:otp_expiration_time,
       verified: true // Mark as verified
     });
 
     // Send a thank-you email after successful verification
     const subject = "Business Registration Successful";
-    BsendMail(business_email, subject, "");
+    await sendMail(business_email, subject, B_MAIL_TEMPLATE(""));
 
     // Cleanup: Remove the temporary data after successful verification
     deleteTempBusinessData(business_email);

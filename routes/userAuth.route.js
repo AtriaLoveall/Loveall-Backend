@@ -2,8 +2,8 @@
 import { Router } from 'express';
 import register from '../controllers/users/registerController.js';
 import verifyOtp from '../controllers/users/verifyOtpController.js'
-import forgetPassword from '../controllers/users/forgetPasswordController.js';
-import sendOTP from '../controllers/sendOTP.js';
+import forgetPassword from '../controllers/forgetPassword.controller.js';
+import sendOTP from '../controllers/sendOTP.controller.js';
 import login from '../controllers/login.controller.js';
 
 const router = Router(); // Instantiate the Router

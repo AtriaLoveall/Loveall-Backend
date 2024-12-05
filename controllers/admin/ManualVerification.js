@@ -1,6 +1,8 @@
 import { Business } from '../models/association.js';
-import BsendMail from '../services/BsendMail.js';
+import sendMail from '../services/sendMail.js';
 import { hashPassword } from "../services/passwordHash.js";
+import B_MAIL_TEMPLATE from "../../config/bMail.template.js"
+
 
 // Function to generate random password
 const generateRandomPassword = (length = 8) => {
@@ -37,7 +39,7 @@ const manualVerifyBusiness = async (req, res, next) => {
         // Send email with user ID and password
         const subject = "Manual Verification Completed";
         const message = `Your account has been manually verified. Here are your login details:\nUser ID: ${business.business_email}\nPassword: ${randomPassword}`;
-        await BsendMail(business.business_email, subject, message);
+        await sendMail(business.business_email, subject, B_MAIL_TEMPLATE(message));
 
         return res.status(200).json({ success: true, message: "Manual verification completed and email sent." });
     } catch (error) {

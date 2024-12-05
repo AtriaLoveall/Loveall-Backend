@@ -3,8 +3,8 @@ import { Op } from "sequelize";
 import { Business } from '../../models/association.js';
 import generateOTP from "../../services/otpGenerator.js";
 import sendMail from "../../services/sendMail.js";
-import { storeTempBusinessData } from "../tempStorage.js"; // Import the temporary storage functions
-
+import { storeTempBusinessData } from "../../helper/tempStorage.js"; // Import the temporary storage functions
+import MAIL_TEMPLATE from "../../config/mail.template.js"
 
 const registerBusiness = async (req, res, next) => {
   const { 
@@ -85,7 +85,7 @@ const registerBusiness = async (req, res, next) => {
 
     // Send OTP to the business email
     const subject = "OTP Verification for Business Registration";
-    sendMail(otp, business_email, subject);
+    sendMail(business_email, subject, MAIL_TEMPLATE(otp));
 
     // Sending response back to the client
     res.status(201).json({
