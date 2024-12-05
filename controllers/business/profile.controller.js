@@ -1,29 +1,9 @@
-import { verifyJWT } from '../../services/jwt.js';
-import Business from '../../models/business.model.js';
+import {Business} from '../../models/association.js';
 
-const businessProfileController = async (req, res) => {
+const profileController = async (req, res, next) => {
   try {
-    const authHeader = req.headers['authorization'];
-    console.log("Received Authorization header:", authHeader);
-
-    if (!authHeader) {
-      return res.status(401).json({ message: 'No authorization token provided' });
-    }
-
-    const token = authHeader.split(' ')[1];
-    console.log("Extracted token:", token);
-
-    let decoded;
-    try {
-      decoded = verifyJWT(token);
-      console.log("Decoded token:", decoded);
-    } catch (error) {
-      console.error("Token verification error:", error);
-      return res.status(401).json({ message: 'Invalid token' });
-    }
-
     const business = await Business.findOne({
-      where: { business_id: decoded.id },
+      where: { business_id: req.business.id },
       attributes: [
         'business_name',
         'business_email',
@@ -31,9 +11,6 @@ const businessProfileController = async (req, res) => {
         'entity_type',
         'contact_number',
         'business_address',
-        'city',
-        'state',
-        'zip_code',
         'gstin',
         'tan',
         'business_purpose',
@@ -67,12 +44,10 @@ const businessProfileController = async (req, res) => {
       updated_at: business.updated_at || new Date()
     };
 
-    console.log("Sending response:", response);
     res.status(200).json(response);
   } catch (error) {
-    console.error('Error in businessProfileController:', error);
-    res.status(500).json({ message: 'Internal server error' });
+    return next(error);
   }
 };
 
-export default businessProfileController;
+export default profileController;

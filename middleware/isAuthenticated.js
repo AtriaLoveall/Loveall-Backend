@@ -61,10 +61,16 @@ const businessAuthMiddleware = async (req, res, next) => {
     const token = authorization.split(' ')[1];
     try {
         // const decoded = verifyJWT(token);
-        const decoded = await jwt.verify(token, process.env.JWT_SECRET);
-        console.log("I have not reached")
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        console.log(decoded)
         const business = await Business.findByPk(decoded.id);
         if (business) {
+            if (decoded.type == 'user' ) {
+                return res.status(403).json({
+                    message: "Unauthorized! Business route is not accessible",
+                    redirectTo: "/"
+                });
+            }
             req.business = decoded;
             next();
         }

@@ -4,19 +4,6 @@ import Business from '../../models/business.model.js';
 
 const businessProfileUpdateController = async (req, res) => {
   try {
-    const authHeader = req.headers['authorization'];
-    if (!authHeader) {
-      return res.status(401).json({ message: 'No authorization token provided' });
-    }
-
-    const token = authHeader.split(' ')[1];
-    let decoded;
-    try {
-      decoded = verifyJWT(token);
-    } catch (error) {
-      return res.status(401).json({ message: 'Invalid token' });
-    }
-
     const updatedData = req.body;
     delete updatedData.business_id; // Prevent updating the business_id
 
