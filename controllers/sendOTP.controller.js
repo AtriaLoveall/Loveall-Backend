@@ -2,6 +2,7 @@ import {User, Business} from '../models/association.js'
 import generateOTP from "../services/otpGenerator.js";
 import sendMail from "../services/sendMail.js";
 import validator from "validator";
+import MAIL_TEMPLATE from '../config/mail.template.js';
 const sendOTP = async (req, res, next) => {
     try {
         const {email} = req.body;
@@ -45,7 +46,7 @@ const sendOTP = async (req, res, next) => {
             );
         }
         const subject = "OTP verification"
-        await sendMail(otp, email, subject);
+        await sendMail(email, subject, MAIL_TEMPLATE(otp));
         return res.status(200).json({success: true, message: "Kindly verify the OTP"});
     } catch (error) {
         return next(error);

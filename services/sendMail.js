@@ -5,7 +5,7 @@ const sendMail = async (to, subject, content) => {
         from: process.env.EMAIL, // sender address
         to, // receiver email
         subject, // Subject line
-        text: otp,
+        text: content,
         html: content,
     }
     try {

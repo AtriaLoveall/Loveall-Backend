@@ -85,20 +85,37 @@ const login = async (req, res, next) => {
               message: "Account pending manual verification. Contact support.",
             });
         }
-    
-        // Verify password
-        const isMatched = await comparePassword(password, business.password_hash);
-        if (!isMatched) {
-          return res
-            .status(400)
-            .json({ success: false, message: "Incorrect password." });
+
+        // If otp is provide do all check
+        if (otp) {
+          const currentTime = new Date().getTime();
+          const otp_expiration_time = business.otp_expiration_time.getTime();
+          if (currentTime > otp_expiration_time) {
+            return res
+              .status(400)
+              .json({ success: false, message: "OTP has been expired" });
+          }
+          if (otp !== business.otp) {
+            return res
+              .status(400)
+              .json({ success: false, message: "It is an invalid OTP." });
+          }
         }
-        if (business.temp_pass === true) {
-          return res
-            .status(403)
-            .json({ success: false, message: "Kindly change your password." });
+        else {
+          // If password is provided do proper check
+          const isMatched = await comparePassword(password, business.password_hash);
+          if (!isMatched) {
+            return res
+              .status(400)
+              .json({ success: false, message: "Incorrect password." });
+          }
+          if (business.temp_pass === true) {
+            return res
+              .status(403)
+              .json({ success: false, message: "Kindly change your password." });
+          }
+          // Create JWT token
         }
-        // Create JWT token
         const payload = {
           id: business.business_id,
           email: business.business_email,

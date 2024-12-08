@@ -5,6 +5,7 @@ import { hashPassword } from "../../services/passwordHash.js";
 import generateOTP from "../../services/otpGenerator.js";
 import sendMail from "../../services/sendMail.js";
 import { createJWT } from "../../services/jwt.js";
+import MAIL_TEMPLATE from "../../config/mail.template.js";
 
 const register = async (req, res, next) => {
   const { first_name, last_name, email, phone_number, password } = req.body;
@@ -91,7 +92,7 @@ const register = async (req, res, next) => {
 
     // Sending otp to client
     const subject = "OTP verification"
-    sendMail(otp, email, subject);
+    sendMail(email, subject, MAIL_TEMPLATE(otp));
 
     // Sending response back to the the client
     res.status(201).json({

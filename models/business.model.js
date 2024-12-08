@@ -95,6 +95,7 @@ const Business = sequelize.define('business', {
     },
     'otp_expiration_time': {
         type: DataTypes.DATE,
+        allowNull: true,
         defaultValue: false
     },
 }, {

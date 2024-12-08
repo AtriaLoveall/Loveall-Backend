@@ -21,7 +21,7 @@ const getPersonalInfo = async (req, res) => {
 
 const updatePersonalInfo = async (req, res) => {
   try {
-    const { first_name, last_name, email, phone_number, date_of_birth } = req.body;
+    const { first_name, last_name, email, phone_number, date_of_birth, address } = req.body;
 
     const [updatedRows] = await User.update(
       { first_name, last_name, email, phone_number, date_of_birth, address },

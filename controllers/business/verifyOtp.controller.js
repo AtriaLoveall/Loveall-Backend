@@ -24,18 +24,23 @@ const verifyBusinessOtp = async (req, res, next) => {
     if (tempBusinessData.otp !== otp) {
       return res.status(401).json({ success: false, message: "Incorrect verification code." });
     }
+    console.log("Check1")
 
     // Check if the OTP has expired
     const current_time = new Date().getTime();
-    const expiration_time = new Date(tempBusinessData.otp_expiration_time).getTime();
+    console.log("Check2")
+    const expiration_time = tempBusinessData.otp_expiration_time;
     if (current_time > expiration_time) {
       return res.status(403).json({ success: false, message: "OTP has expired. Please resend the OTP." });
     }
+    console.log("Check2")
 
 
-    const otp_expiration_time = new Date(current_time + expiration_time * 60000);
-    //const otp_expiration_time_iso = otp_expiration_time.toISOString();
-    // const otp_expiration_time_iso = "2024-11-03T10:30:00Z";
+    // const otp_expiration_time = new Date(current_time + expiration_time * 60000);
+    // const otp_expiration_time_iso = otp_expiration_time.toISOString();
+    // // const otp_expiration_time_iso = "2024-11-03T10:30:00Z";
+    // console.log(otp_expiration_time)
+    // console.log(otp_expiration_time_iso)
     const password_hash="";
     // Create the business record in the database
     const newBusiness = await Business.create({
@@ -49,7 +54,7 @@ const verifyBusinessOtp = async (req, res, next) => {
       tan: tempBusinessData.tan,
       owner_name: tempBusinessData.owner_name,
       owner_contact_number: tempBusinessData.owner_contact_number,
-      otp_expiration_time:otp_expiration_time,
+      otp_expiration_time: null,
       verified: true // Mark as verified
     });
 
