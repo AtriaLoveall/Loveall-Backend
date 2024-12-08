@@ -1,4 +1,4 @@
-import { User, Business } from "../models/association.js";
+import { User, Business, Admin } from "../models/association.js";
 import { createJWT } from "../services/jwt.js";
 import { comparePassword } from "../services/passwordHash.js";
 
@@ -10,11 +10,10 @@ const login = async (req, res, next) => {
   }
   try {
     // Check if user is registered or not
-    let token, redirectTo, found = false;
+    let token, redirectTo;
     const user = await User.findOne({ where: { email } });
     if (user) {
         // Check if user is verified or not
-        found = true;
         if (!user.verified) {
           return res
             .status(400)
@@ -131,10 +130,52 @@ const login = async (req, res, next) => {
         });
     }
 
-    if (!found) {
-        return res.status(400).json({success: false, message: "User Not found. Kindly register.", redirectTo: '/register'});
+    // Check for the business email
+    const admin = await Admin.findOne({
+      where: { admin_email: email },
+    });
+    if (admin) {
+        // If otp is provide do all check
+        if (otp) {
+          const currentTime = new Date().getTime();
+          const otp_expiration_time = business.otp_expiration_time.getTime();
+          if (currentTime > otp_expiration_time) {
+            return res
+              .status(400)
+              .json({ success: false, message: "OTP has been expired" });
+          }
+          if (otp !== admin.otp) {
+            return res
+              .status(400)
+              .json({ success: false, message: "It is an invalid OTP." });
+          }
+        }
+        else {
+          // If password is provided do proper check
+          const isMatched = await comparePassword(password, admin.password_hash);
+          if (!isMatched) {
+            return res
+              .status(400)
+              .json({ success: false, message: "Incorrect password." });
+          }
+          // Create JWT token
+        }
+        const payload = {
+          id: admin.business_id,
+          email: admin.admin_email,
+          type: 'admin'
+        };
+        token = createJWT(payload);
+        redirectTo = "/admin";
+        return res.status(200).json({
+            success: true,
+            message: "You have logged in successfully",
+            token,
+            redirectTo,
+        });
     }
 
+    return res.status(400).json({success: false, message: "User Not found. Kindly register.", redirectTo: '/register'});
     
   } catch (error) {
     next(error);
