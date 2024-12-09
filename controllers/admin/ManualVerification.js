@@ -1,6 +1,6 @@
-import { Business } from '../models/association.js';
-import sendMail from '../services/sendMail.js';
-import { hashPassword } from "../services/passwordHash.js";
+import { Business } from '../../models/association.js';
+import sendMail from '../../services/sendMail.js';
+import { hashPassword } from "../../services/passwordHash.js";
 import B_MAIL_TEMPLATE from "../../config/bMail.template.js"
 
 
