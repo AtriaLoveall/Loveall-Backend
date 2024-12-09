@@ -43,7 +43,7 @@ const login = async (req, res, next) => {
           const hashedPassword = user.password_hash;
           const isMatched = await comparePassword(password, hashedPassword);
           if (!isMatched) {
-            res
+            return res
               .status(401)
               .json({ success: false, message: "Password is incorrect." });
           }
@@ -108,13 +108,8 @@ const login = async (req, res, next) => {
               .status(400)
               .json({ success: false, message: "Incorrect password." });
           }
-          if (business.temp_pass === true) {
-            return res
-              .status(403)
-              .json({ success: false, message: "Kindly change your password." });
-          }
-          // Create JWT token
         }
+        // Create JWT token
         const payload = {
           id: business.business_id,
           email: business.business_email,
